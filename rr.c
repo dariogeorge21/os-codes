@@ -15,6 +15,7 @@ int main(){
         scanf("%d", &bt[i]);
     }
 
+    // initialize remaining burst time
     for (int i = 0; i < n; i++){
         rem_bt[i] = bt[i];
     }
@@ -45,6 +46,7 @@ int main(){
         }
 
         if (executed == 0){
+            // No process was executed, so we just move to the next time unit
             time++;
         }
     }
@@ -64,14 +66,14 @@ int main(){
     }
 
     // printing the results
-
     printf("PID\tAT\tBT\tCT\tTAT\tWT\n");
     for (int i = 0; i < n; i++){
         printf("%d\t%d\t%d\t%d\t%d\t%d\n", pid[i], at[i], bt[i], ct[i], tat[i], wt[i]);
     }
 
+    // average tat and wt
     printf("Average Turnaround Time: %.2f\n", (float)total_tat/n);
-    printf("Average Waiting Time: %.2f\n", (float)total_wt/n);
+    printf("Average Waiting Time: %.2f\n", (float)total_wt/n); 
 
     // Grantt chart
     printf("\nGantt Chart:\n");

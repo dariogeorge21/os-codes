@@ -2,7 +2,7 @@
 
 int main() {
     int pages[100], frames[10], n, f, i, j;
-    int faults = 0, index = 0, found;
+    int faults = 0, index = 0, found, hit = 0;
 
     printf("Enter number of pages: ");
     scanf("%d", &n);
@@ -23,6 +23,7 @@ int main() {
         // Check if page already in frame
         for(j = 0; j < f; j++) {
             if(frames[j] == pages[i]) {
+                hit++;
                 found = 1;
                 break;
             }
@@ -46,6 +47,6 @@ int main() {
     }
 
     printf("\nTotal Page Faults = %d\n", faults);
-
+    printf("Total Page Hits = %d\n", hit);
     return 0;
 }

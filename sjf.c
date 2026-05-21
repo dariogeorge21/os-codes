@@ -6,7 +6,7 @@ int main() {
     printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    int pid[n], at[n], bt[n], ct[n], tat[n], wt[n];
+    int pid[n], at[n], bt[n], ct[n], tat[n], wt[n], granttpid[n], granttct[n];
     int completed[n], time = 0, count = 0;
 
     // Input
@@ -35,6 +35,8 @@ int main() {
             // Execute process
             time += bt[index];
             ct[index] = time;
+            granttpid[count] = pid[index];
+            granttct[count] = time;
 
             completed[index] = 1;
             count++;
@@ -69,9 +71,14 @@ int main() {
 
     //Grantt Chart
     printf("\nGrantt Chart:\n");
-    for(int i = 0; i < n; i++){
-        printf("\tP%d\t|", pid[i]);
+    for(int i = 0; i < n; i++) {
+        printf("| P%d ", granttpid[i]);
     }
-
+    printf("|\n");
+    for(int i = 0; i < n; i++) {
+        printf("%d    ", granttct[i]);
+    }
+    printf("\n");
     return 0;
 }
+    

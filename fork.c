@@ -18,6 +18,7 @@ int main(){
         printf("Parent Process:\n");
         printf("Parent PID: %d\n", getpid());
         printf("Child PID: %d\n", pid);
+        sleep(5); // Sleep to ensure child process finishes before parent process exits
     }
     return 0;
 }

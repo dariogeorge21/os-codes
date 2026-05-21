@@ -1,81 +1,68 @@
-#include <stdio.h>
+#include<stdio.h>
 
-int main(void)
-{
-	int frames, pages;
-	if (printf("Enter number of frames: "), fflush(stdout), scanf("%d", &frames) != 1)
-		return 0;
-	if (printf("Enter number of pages: "), fflush(stdout), scanf("%d", &pages) != 1)
-		return 0;
+int main(){
+	int n, f;
+	int faults = 0, index = 0, found = 0, hit = 0;
 
-	if (frames <= 0 || pages <= 0)
-		return 0;
+	printf("Enter number of pages: ");
+	scanf("%d", &n);
 
-	if (frames > 10)
-		frames = 10;
-	if (pages > 50)
-		pages = 50;
+	// Enter number of frames
+	printf("Enter number of frames: ");
+	scanf("%d", &f);
 
-	int frame[10], ref[50], time[10];
-	int i, j, least;
-	int faults = 0, hits = 0;
-	int counter = 0;
+	int pages[n], frames[f], time[f];
 
-	printf("Enter reference string: ");
-	for (i = 0; i < pages; i++)
-		scanf("%d", &ref[i]);
+	// Input page reference string
+	printf("Enter the page reference string: ");
+	for (int i = 0; i < n; i++){
+		scanf("%d", &pages[i]);
+	}
 
-	/* Initialize frames and time stamps */
-	for (i = 0; i < frames; i++) {
-		frame[i] = -1;
+	// Initialize frames
+	for (int i = 0; i < f; i++){
+		frames[i] = -1;
 		time[i] = 0;
 	}
 
-	for (i = 0; i < pages; i++) {
-		int found = 0;
+	// LRU page replacement algorithm
 
-		/* Check for hit */
-		for (j = 0; j < frames; j++) {
-			if (frame[j] == ref[i]) {
-				counter++;
-				time[j] = counter;
-				hits++;
+	int counter = 0;
+	for (int i = 0; i < n; i++){
+		found = 0;
+
+		// Check if page already in frame
+		for (int j = 0; j < f; j++){
+			if (frames[j] == pages[i]){
+				hit++;
 				found = 1;
+				time[j] = counter++;
 				break;
 			}
 		}
-
-		if (!found) {
-			/* Try to fill empty frame first */
-			for (j = 0; j < frames; j++) {
-				if (frame[j] == -1) {
-					frame[j] = ref[i];
-					counter++;
-					time[j] = counter;
-					faults++;
-					found = 1;
-					break;
+		if (found == 0){
+			int pos = 0;
+			for (int j = 1; j < f; j++){
+				if (time[j] < time[pos]){
+					pos = j;
 				}
 			}
-
-			/* If no empty frame, replace least recently used */
-			if (!found) {
-				least = 0;
-				for (j = 1; j < frames; j++) {
-					if (time[j] < time[least])
-						least = j;
-				}
-
-				frame[least] = ref[i];
-				counter++;
-				time[least] = counter;
-				faults++;
+			frames[pos] = pages[i];
+			time[pos] = counter++;
+			faults++;
+		}
+		// Display frames
+		printf("\nPage %d: ", pages[i]);
+		for (int j = 0; j < f; j++){
+			if (frames[j] != -1){
+				printf("%d ", frames[j]);
+			} else{
+				printf("- ");
 			}
 		}
 	}
 
-	printf("Page Faults = %d\n", faults);
-	printf("Page Hits = %d\n", hits);
-
+	printf("Number of page faults: %d\n", faults);
+	printf("Number of page hits: %d\n", hit);
 	return 0;
 }

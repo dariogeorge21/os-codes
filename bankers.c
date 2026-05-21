@@ -1,110 +1,83 @@
-#include <stdio.h>
+#include<stdio.h>
 
-int main() {
-    int n, m;
+int main(){
+    int r, c;
+    printf("Enter the number of processes: ");
+    scanf("%d", &r);
+    printf("Enter the number of resources: ");
+    scanf("%d", &c);
 
-    // n = number of processes
-    // m = number of resources
-    printf("Enter number of processes: ");
-    scanf("%d", &n);
+    int alloc[r][c], max[r][c], need[r][c];
+    int work[c], avail[c];
+    int finish[r], safe[r];
 
-    printf("Enter number of resources: ");
-    scanf("%d", &m);
-
-    int alloc[n][m];
-    int max[n][m];
-    int need[n][m];
-    int avail[m];
-
-    // Input Allocation Matrix
-    printf("\nEnter Allocation Matrix:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    for (int i = 0; i < r; i++){
+        printf("Enter the allocation for process P%d: ", i+1);
+        for (int j = 0; j < c; j++){
             scanf("%d", &alloc[i][j]);
         }
     }
 
-    // Input Max Matrix
-    printf("\nEnter Max Matrix:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    for (int i = 0; i < r; i++){
+        printf("Enter the maximum demand for process P%d: ", i+1);
+        for (int j = 0; j < c; j++){
             scanf("%d", &max[i][j]);
         }
     }
 
-    // Input Available Resources
-    printf("\nEnter Available Resources:\n");
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < c; i++){
+        printf("Enter the available amount of resource R%d: ", i+1);
         scanf("%d", &avail[i]);
+        work[i] = avail[i];
     }
 
-    // Calculate Need Matrix
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    // Calculate need matrix
+    for (int i = 0; i < r; i++){
+        for (int j = 0; j < c; j++){
             need[i][j] = max[i][j] - alloc[i][j];
         }
     }
 
-    int finish[n];
-    int safeSeq[n];
-
-    for (int i = 0; i < n; i++) {
+    // iniitialize finish array
+    for (int i = 0; i < r; i++){
         finish[i] = 0;
     }
 
     int count = 0;
 
-    while (count < n) {
+    while (count < r){
         int found = 0;
 
-        for (int i = 0; i < n; i++) {
-
-            // If process not finished
-            if (finish[i] == 0) {
-
-                int possible = 1;
-
-                // Check if resources can be allocated
-                for (int j = 0; j < m; j++) {
-                    if (need[i][j] > avail[j]) {
-                        possible = 0;
+        for (int i = 0; i < r; i++){
+            if (finish[i] == 0){
+                int flag = 0;
+                for (int j = 0; j < c; j++){
+                    if (need[i][j] > work[j]){
+                        flag = 1;
                         break;
                     }
                 }
-
-                // If possible, execute process
-                if (possible) {
-
-                    for (int j = 0; j < m; j++) {
-                        avail[j] += alloc[i][j];
+                if (flag == 0){
+                    for (int j = 0; j < c; j++){
+                        work[j] += alloc[i][j];
                     }
-
-                    safeSeq[count] = i;
-                    count++;
                     finish[i] = 1;
+                    safe[count] = i;
+                    count++;
                     found = 1;
                 }
             }
         }
-
-        // No process could run
-        if (found == 0) {
-            printf("\nSystem is NOT in safe state\n");
-            return 0;
+        if (found == 0){
+            printf("System is in unsafe state!\n");
+            break;
         }
     }
-
-    // Print Safe Sequence
-    printf("\nSystem is in SAFE state.\nSafe sequence:\n");
-
-    for (int i = 0; i < n; i++) {
-        printf("P%d", safeSeq[i]);
-
-        if (i != n - 1)
-            printf(" -> ");
+    printf("Safe sequence is: ");
+    for (int i = 0; i < count; i++){
+        printf("P%d ", safe[i]+1);
     }
-
     printf("\n");
-
     return 0;
 }
+

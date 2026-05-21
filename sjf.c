@@ -75,6 +75,7 @@ int main() {
         printf("| P%d ", granttpid[i]);
     }
     printf("|\n");
+    printf("0    ");
     for(int i = 0; i < n; i++) {
         printf("%d    ", granttct[i]);
     }

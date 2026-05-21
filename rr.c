@@ -5,7 +5,7 @@ int main(){
     printf("Enter the number of processes: ");
     scanf("%d", &n);
 
-    int at[n], bt[n], ct[n], tat[n], wt[n], rem_bt[n], pid[n];
+    int at[n], bt[n], ct[n], tat[n], wt[n], rem_bt[n], pid[n], grantid[n], grantct[n];
 
     for (int i = 0; i < n; i++){
         printf("Enter the arrival time and burst time:");
@@ -22,19 +22,27 @@ int main(){
 
     int count = 0, time = 0;
 
-    while (count<n){
-        for(int i =0; i< n; i++){
-            if (rem_bt[i]>0){
-                if (rem_bt[i] > time_quantum){
+    while (count < n){
+        int executed = 0;
+        for(int i = 0; i < n; i++){
+            if(at[i] <= time && rem_bt[i] > 0){
+                executed = 1;
+                if(rem_bt[i] > time_quantum){
                     time += time_quantum;
                     rem_bt[i] -= time_quantum;
                 } else{
-                    time+= rem_bt[i];
+                    time += rem_bt[i];
                     ct[i] = time;
                     rem_bt[i] = 0;
+                    grantid[i] = pid[i];
+                    grantct[i] = ct[i];
                     count++;
                 }
             }
+        }
+        // If no process executed, CPU is idle
+        if(executed == 0){
+            time++;
         }
     }
     // calculating tat and wt
@@ -60,16 +68,12 @@ int main(){
     // Grantt chart
     printf("\nGantt Chart:\n");
     for (int i = 0; i < n; i++){
-        printf("| P%d ", pid[i]);
+        printf("| P%d ", grantid[i]);
     }
     printf("|\n");
+    printf("0 ");
     for (int i = 0; i < n; i++){
-        printf("%d\t", at[i]);
-    }
-    printf("\n");
-
-    for (int i = 0; i < n; i++){
-        printf("%d\t", ct[i]);
+        printf("%d ", grantct[i]);
     }
     printf("\n");
 

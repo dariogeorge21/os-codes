@@ -6,9 +6,7 @@ int main() {
     printf("Enter number of processes: ");
     scanf("%d", &n);
 
-    int pid[n], at[n], bt[n], pr[n];
-    int ct[n], tat[n], wt[n];
-    int completed[n];
+    int pid[n], at[n], bt[n], pr[n], ct[n], tat[n], wt[n], completed[n], grantpid[n], grantct[n];
 
     int time = 0, count = 0;
 
@@ -37,6 +35,8 @@ int main() {
         if(index != -1) {
             time += bt[index];
             ct[index] = time;
+            grantpid[count] = pid[index];
+            grantct[count] = time;
 
             completed[index] = 1;
             count++;
@@ -55,11 +55,33 @@ int main() {
     printf("\nPID\tAT\tBT\tPR\tCT\tTAT\tWT\n");
 
     for(int i = 0; i < n; i++) {
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+    printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
                pid[i], at[i], bt[i], pr[i],
                ct[i], tat[i], wt[i]);
     }
 
-    
+    // Calculate and print averages
+    int total_tat = 0, total_wt = 0;
+    for(int i = 0; i < n; i++) {
+        total_tat += tat[i];
+        total_wt += wt[i];
+    }
+
+    printf("\nAverage TAT = %.2f", (float)total_tat / n);
+    printf("\nAverage WT = %.2f\n", (float)total_wt / n);
+
+    //grantt chart
+
+    printf("\nGrantt Chart:\n");
+    for (int i = 0; i < n; i++){
+        printf("| P%d\t", grantpid[i]);
+    }
+    printf("|\n");
+    printf("0");
+    for (int i = 0; i < n; i++){
+        printf("\t%d", grantct[i]);
+    }
+    printf("\n");
+
     return 0;
 }
